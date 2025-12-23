@@ -18,7 +18,6 @@ def login():
     ip = request.remote_addr
     now = time.time()
 
-    # 1️⃣ Проверка: IP заблокирован?
     if ip in blocked_until and now < blocked_until[ip]:
         return "Too many attempts. Try later.", 429
 
@@ -26,16 +25,13 @@ def login():
         username = request.form.get("username")
         password = request.form.get("password")
 
-        # 2️⃣ Успешный логин
         if username == USERNAME and password == PASSWORD:
             failed_attempts.pop(ip, None)
             blocked_until.pop(ip, None)
             return redirect(url_for("welcome"))
 
-        # 3️⃣ Неудачная попытка
         failed_attempts[ip] = failed_attempts.get(ip, 0) + 1
 
-        # 4️⃣ Превышен лимит → блокировка
         if failed_attempts[ip] >= MAX_ATTEMPTS:
             blocked_until[ip] = now + BLOCK_TIME
             failed_attempts[ip] = 0
