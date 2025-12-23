@@ -1,7 +1,7 @@
 import requests
 
-passwords = ["admin", "hello", "password", "bye", "login"]
-users = ["admin", "hello", "password", "bye", "login"]
+passwords = ["admin","book","attemp","evening","hello", "password", "bye", "login"]
+users = ["admin", "hello", "password", "bye", "login","hard","pug","mops","good"]
 
 url = "http://127.0.0.1:5000/"
 
