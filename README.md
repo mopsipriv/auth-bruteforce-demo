@@ -41,6 +41,15 @@ This demonstrates the absence of:
 
 ---
 
+## Security-related events are logged:
+
+- failed login attempts
+- successful logins
+- IP blocks triggered by brute-force behavior
+
+Logs are written to a local log file for analysis.
+
+
 ## Implemented Protection
 
 - Rate limiting based on client IP address

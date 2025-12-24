@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 import time
+import logging 
 
 app = Flask(__name__)
 
@@ -11,6 +12,10 @@ BLOCK_TIME = 30  # seconds
 
 failed_attempts = {}
 blocked_until = {}
+
+logging.basicConfig(filename="info.log",format='%(asctime)s %(message)s',filemode='a')
+logger=logging.getLogger()
+logger.setLevel(logging.DEBUG)
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -28,13 +33,15 @@ def login():
         if username == USERNAME and password == PASSWORD:
             failed_attempts.pop(ip, None)
             blocked_until.pop(ip, None)
+            logger.info(f"Successful login for user: {username} from IP {ip}")
             return redirect(url_for("welcome"))
 
         failed_attempts[ip] = failed_attempts.get(ip, 0) + 1
-
+        logger.warning(f"Successful login for user: {username} from IP {ip}")
         if failed_attempts[ip] >= MAX_ATTEMPTS:
             blocked_until[ip] = now + BLOCK_TIME
             failed_attempts[ip] = 0
+            logging.warning(f"IP blocked due to brute-force: {ip}")
             return "IP blocked for 30 seconds", 429
 
         return render_template("login.html", error="Invalid username or password")
